@@ -1,0 +1,33 @@
+name: CI Smoke Test
+
+on:
+  push:
+    branches:
+      - main # Or your default branch like 'master'
+  pull_request:
+    branches:
+      - main # Or your default branch like 'master'
+
+jobs:
+  smoke-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.9' # Ensure this matches your environment.yml
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install streamlit google-generativeai Pillow
+
+    - name: Run smoke test
+      # Make sure the script is executable
+      run: |
+        chmod +x TEST.sh
+        ./TEST.sh
